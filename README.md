@@ -30,11 +30,11 @@ Calculadora de experiencia laboral desarrollada con HTML, CSS y JavaScript. No r
 
 Por defecto se incluyen el día inicial y el final. Del 01/01/2024 al 31/12/2024 son 366 días y un año de calendario; el mismo periodo en 2023 son 365 días y un año.
 
-Se calculan meses completos desde la fecha inicial, ajustando al último día disponible cuando corresponde. Cada 12 meses forman un año. Cuando se activa la opción de no duplicar fechas, los intervalos superpuestos o contiguos se unen antes del cálculo.
+El total exacto de días se normaliza a años, meses y días desde la fecha de inicio más antigua. Los días de huecos entre contratos no se cuentan. Para periodos separados, esta es una equivalencia de calendario: no representa un único periodo continuo trabajado.
 
-Al sumar periodos separados, se suman sus componentes de años, meses y días. Los días residuales y los días ingresados manualmente permanecen como días: pueden superar 30, porque no se les aplica una equivalencia fija de mes o año. El total de días también se muestra por separado.
+Cuando solo se ingresan días manuales, la interfaz permite elegir una fecha de referencia. Por defecto se usa el 1 de enero del año actual (o ayer si hoy fuera 1 de enero); la selección se guarda en el navegador. Los días manuales no permiten verificar cruces con otros periodos.
 
-Sin fechas de referencia, no se pueden identificar cruces ni distinguir años bisiestos para los días manuales.
+Los años bisiestos y la duración de los meses se toman del calendario de referencia. Cada registro por fechas mantiene también su duración individual. Ejemplo de regresión: 01/01/2018–31/08/2025 más 98 días manuales = 2898 días; equivalencia desde 01/01/2018: 7 años, 11 meses y 7 días.
 
 ## Probar en tu equipo
 
@@ -71,3 +71,32 @@ En el repositorio, abre **Settings → Pages**. En **Build and deployment**, sel
 Referencia: https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site
 
 Los registros son locales a cada navegador y dirección web; no se transfieren automáticamente de la página anterior a GitHub Pages ni se comparten con otros usuarios.
+
+## Correcciones — 23/10/2026
+
+- Guardado con Enter compatible con HTTP y navegadores sin crypto.randomUUID.
+- Borrado de dígitos junto a separadores y pegado de fechas ISO o con separadores.
+- Preferencias de conteo restauradas al recargar.
+- Cambio de modo durante una edición sin sobrescribir accidentalmente el registro.
+- Validación inmediata de fechas futuras, datos dañados y cantidades enteras.
+- Cruces bloqueados independientemente de la opción de incluir extremos.
+- Copia de registros guardados con alternativa cuando el portapapeles no está disponible.
+- Sin reconstrucción del historial cada minuto: conserva el foco durante el uso.
+
+## Pruebas
+
+Con Node.js 18 o superior, ejecuta `node --test tests/calc.test.cjs`. Incluye 15 pruebas de fechas, años bisiestos, cruces, almacenamiento válido y sumas. También se verificaron en navegador: registro con Enter, edición, cambio de modo, calendario, borrado de dígitos, persistencia de opciones, cruces, fechas futuras y copia del resumen.
+
+## Corrección de días sobrantes
+
+La suma ya no muestra cantidades como 98 días en el componente final. Se normaliza el total utilizando una referencia visible, se incluye esa referencia en el resumen y se mantiene el total de días exactos. Los registros existentes se recalculan sin borrarlos.
+
+## Restablecer
+
+El botón Restablecer limpia el formulario, elimina los registros guardados y restaura las opciones iniciales. Pide confirmación si hay registros o campos escritos. Cancelar conserva los datos. El reinicio confirmado se guarda en este navegador.
+
+## Versión 1.2 — Botones y compatibilidad
+
+Restablecer y Borrar todo ahora utilizan una confirmación dentro de la página, sin depender de ventanas confirm del navegador. El código de cálculo y de la interfaz se publica junto en un archivo con nombre versionado para evitar mezclas de archivos antiguos en caché.
+
+Si modificas `app.js`, `calc.js` o `style.css`, ejecuta `node scripts/build-static.cjs` y sube también el `index.html` actualizado y los archivos `calcuchamba-*.js` y `calcuchamba-*.css` generados. El ZIP ya incluye estos archivos listos para subir.

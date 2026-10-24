@@ -1,0 +1,17 @@
+const fs = require('node:fs');
+const path = require('node:path');
+const crypto = require('node:crypto');
+const dir = fs.existsSync(path.join(__dirname,'../dist/index.html')) ? path.join(__dirname,'../dist') : path.join(__dirname,'..');
+const source = ['calc.js','app.js'].map(name=>fs.readFileSync(path.join(dir,name),'utf8'));
+const js = source[0] + '\n;(function(){\n' + source[1] + '\n})();\n';
+const css = fs.readFileSync(path.join(dir,'style.css'),'utf8');
+const hash = crypto.createHash('sha256').update(js+css).digest('hex').slice(0,12);
+const jsName = `calcuchamba-${hash}.js`, cssName = `calcuchamba-${hash}.css`;
+fs.writeFileSync(path.join(dir,jsName),js);
+fs.writeFileSync(path.join(dir,cssName),css);
+let html=fs.readFileSync(path.join(dir,'index.html'),'utf8');
+html=html.replace(/<script src="(?:calc\.js|app\.js|calcuchamba-[a-f0-9]+\.js)"><\/script>/g,'');
+html=html.replace(/href="(?:style\.css|calcuchamba-[a-f0-9]+\.css)"/,`href="${cssName}"`);
+html=html.replace('</body>',`<script src="${jsName}"></script></body>`);
+fs.writeFileSync(path.join(dir,'index.html'),html);
+console.log('Archivos sincronizados: '+hash);
