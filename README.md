@@ -72,6 +72,12 @@ Referencia: https://docs.github.com/en/pages/getting-started-with-github-pages/c
 
 Los registros son locales a cada navegador y dirección web; no se transfieren automáticamente de la página anterior a GitHub Pages ni se comparten con otros usuarios.
 
+## Google y buscadores
+
+`robots.txt` permite el rastreo y señala el `sitemap.xml`, que incluye la URL pública `https://calcuchamba.netlify.app/`. Ambos archivos deben publicarse en la misma carpeta que `index.html`. La página también incluye URL canónica, descripción y metadatos para compartir.
+
+En [Google Search Console](https://search.google.com/search-console), agrega y verifica la propiedad `https://calcuchamba.netlify.app/` y envía `sitemap.xml` desde la sección **Sitemaps**. La metaetiqueta de verificación de Google ya está incluida en `index.html`; si Search Console proporciona una etiqueta distinta, reemplaza su valor por el nuevo y vuelve a publicar. El rastreo y la indexación pueden tardar y no están garantizados por la configuración del sitio.
+
 ## Correcciones — 23/10/2026
 
 - Guardado con Enter compatible con HTTP y navegadores sin crypto.randomUUID.
